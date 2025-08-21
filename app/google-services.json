@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "364805960738",
+    "project_id": "jedyapp",
+    "storage_bucket": "jedyapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364805960738:android:5e9602e113ce05d75e067b",
+        "android_client_info": {
+          "package_name": "com.iwelogic.jedyapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdBOnAksrx77BHTEvmR797ufqFzYO2oxU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
