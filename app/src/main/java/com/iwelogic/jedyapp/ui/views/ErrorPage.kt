@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.iwelogic.jedyapp.R
 
 @Composable
-fun ErrorPage(modifier: Modifier = Modifier, onClickReload: () -> Unit) {
+fun ErrorPage(modifier: Modifier = Modifier, error: String? = null, onClickReload: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(30.dp, alignment = Alignment.CenterVertically),
@@ -20,7 +20,7 @@ fun ErrorPage(modifier: Modifier = Modifier, onClickReload: () -> Unit) {
         Image(painter = painterResource(R.drawable.error_loading), contentDescription = "")
 
         Text(
-            text = "Ups something went wrong",
+            text = error ?: "Ups something went wrong",
             style = MaterialTheme.typography.headlineSmall
         )
         Button(

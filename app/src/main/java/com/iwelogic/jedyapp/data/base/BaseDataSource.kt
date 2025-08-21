@@ -1,9 +1,9 @@
 package com.iwelogic.jedyapp.data.base
 
-import com.google.gson.*
+import com.google.gson.Gson
 import com.iwelogic.jedyapp.models.BaseResponse
-import retrofit2.*
-import java.net.*
+import retrofit2.Response
+import java.net.UnknownHostException
 
 open class BaseDataSource {
 
@@ -12,16 +12,19 @@ open class BaseDataSource {
             val result = request.invoke()
             if (result.isSuccessful) {
                 return try {
-                    Result.success(result.body()!!)
+                    val response = result.body() as BaseResponse
+                    if(response.response == "True"){
+                        Result.success(result.body()!!)
+                    } else {
+                        Result.failure(AppFailure.ResponseFailure(message = response.error))
+                    }
                 } catch (e: Exception) {
                     Result.failure(e)
                 }
             } else {
                 return try {
                     val responseError = Gson().fromJson(result.errorBody()?.string(), BaseResponse::class.java)
-                    Result.failure(
-                        AppFailure.ResponseFailure(message = responseError.message)
-                    )
+                    Result.failure(AppFailure.ResponseFailure(message = responseError.error))
                 } catch (e: Exception) {
                     Result.failure(e)
                 }

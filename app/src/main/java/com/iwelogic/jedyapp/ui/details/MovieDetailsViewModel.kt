@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import androidx.navigation.toRoute
 import com.iwelogic.jedyapp.navigation.Screen
 import com.iwelogic.jedyapp.ui.base.BaseViewModel
-import com.iwelogic.projects.presentation.ui.details.MovieDetailsIntent
 import dagger.hilt.android.lifecycle.*
 import javax.inject.*
 

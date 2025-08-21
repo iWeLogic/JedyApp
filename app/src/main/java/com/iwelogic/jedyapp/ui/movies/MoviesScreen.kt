@@ -1,16 +1,22 @@
 package com.iwelogic.jedyapp.ui.movies
 
-import androidx.compose.foundation.gestures.*
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.pulltorefresh.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.*
-import androidx.compose.ui.unit.*
-import androidx.hilt.navigation.compose.*
-import androidx.lifecycle.*
-import androidx.lifecycle.compose.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.iwelogic.jedyapp.models.Movie
 import com.iwelogic.jedyapp.ui.views.ErrorPage
 
@@ -18,6 +24,7 @@ import com.iwelogic.jedyapp.ui.views.ErrorPage
 @Composable
 fun MoviesScreen(openDetails: (Movie) -> Unit, viewModel: MoviesViewModel = hiltViewModel()) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val state: MoviesState = viewModel.state.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
         viewModel.event
@@ -28,44 +35,71 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, viewModel: MoviesViewModel = hilt
                 }
             }
     }
-
-    when (val state: MoviesState = viewModel.state.collectAsStateWithLifecycle().value) {
-        is MoviesState.Loading -> {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator()
-            }
-        }
-        is MoviesState.Error -> {
-            ErrorPage(modifier = Modifier.fillMaxSize()) {
-                viewModel.handleIntent(MoviesIntent.OnClickReload)
-            }
-        }
-        is MoviesState.Main -> {
-            PullToRefreshBox(
-                isRefreshing = false,
-                onRefresh = {
-                    viewModel.handleIntent(MoviesIntent.OnClickReload)
-                },
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets.systemBars,
+        topBar = {
+            CenterAlignedTopAppBar(
                 modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    state = rememberLazyListState(),
-                    contentPadding = PaddingValues(16.dp),
-                    reverseLayout = false,
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    flingBehavior = ScrollableDefaults.flingBehavior(),
-                    userScrollEnabled = true,
-                ) {
-                    items(state.movies, key = { movie -> movie.title }) {
-                        MovieItem(item = it, modifier = Modifier.fillMaxWidth()) { movie ->
-                            viewModel.handleIntent(MoviesIntent.OpenDetails(movie))
+                    .clip(RoundedCornerShape(0.dp, 0.dp, 15.dp, 15.dp)),
+                title = {
+                    Text(
+                        "JedyApp",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                navigationIcon = {
+
+                }
+            )
+        },
+        content = { innerPadding ->
+            Column(modifier = Modifier.padding(innerPadding)) {
+                SearchBox(
+                    query = state.query,
+                    onQueryChange = {
+                        viewModel.handleIntent(MoviesIntent.OnSearch(it))
+                    }
+                )
+                if (state.isLoading) {
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                        CircularProgressIndicator()
+                    }
+                } else if (!state.error.isNullOrEmpty()) {
+                    ErrorPage(modifier = Modifier.fillMaxSize(), error = state.error) {
+                        viewModel.handleIntent(MoviesIntent.OnClickReload)
+                    }
+                } else {
+                    val movies = state.movies
+                    if (movies.isNullOrEmpty()) {
+                        Text("Empty")
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            state = rememberLazyListState(),
+                            contentPadding = PaddingValues(16.dp),
+                            reverseLayout = false,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            flingBehavior = ScrollableDefaults.flingBehavior(),
+                            userScrollEnabled = true,
+                        ) {
+                            items(state.movies, key = { movie -> movie.imdbID }) {
+                                MovieItem(item = it, modifier = Modifier.fillMaxWidth()) { movie ->
+                                    viewModel.handleIntent(MoviesIntent.OpenDetails(movie))
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-    }
+    )
 }

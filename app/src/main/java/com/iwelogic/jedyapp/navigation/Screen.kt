@@ -17,7 +17,7 @@ sealed class Screen {
     data class Details(
         val type: String? = null,
         val year: String? = null,
-        val imdbID: String? = null,
+        val imdbID: String,
         val poster: String? = null,
         val title: String
     ) : Screen() {

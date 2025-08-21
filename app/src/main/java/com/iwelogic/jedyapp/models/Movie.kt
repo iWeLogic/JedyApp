@@ -11,7 +11,7 @@ data class Movie(
     val year: String? = null,
 
     @field:SerializedName("imdbID")
-    val imdbID: String? = null,
+    val imdbID: String,
 
     @field:SerializedName("Poster")
     val poster: String? = null,

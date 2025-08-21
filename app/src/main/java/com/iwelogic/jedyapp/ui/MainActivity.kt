@@ -1,18 +1,20 @@
 package com.iwelogic.jedyapp.ui
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.*
-import androidx.navigation.toRoute
 import com.iwelogic.jedyapp.navigation.Screen
 import com.iwelogic.jedyapp.theme.JedyAppTheme
 import com.iwelogic.jedyapp.ui.details.MovieDetailsScreen
@@ -20,12 +22,26 @@ import com.iwelogic.jedyapp.ui.movies.MoviesScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             JedyAppTheme {
+                val context = this
+                val statusBar = MaterialTheme.colorScheme.primaryContainer.toArgb()
+                val statusBarTextColor = MaterialTheme.colorScheme.onPrimaryContainer.toArgb()
+                context.enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.light(
+                        statusBar,
+                        statusBarTextColor
+                    ),
+
+                    navigationBarStyle = SystemBarStyle.light(
+                        statusBar,
+                        statusBarTextColor
+                    )
+                )
                 val navController = rememberNavController()
                 navController.saveState()
                 Column {
@@ -43,15 +59,14 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Movies().route) {
                             MoviesScreen(
                                 openDetails = { movie ->
-                                    navController.navigate(
-                                        Screen.Details.convertFromMovie(movie)
-                                    )
+                                    navController.navigate(Screen.Details.convertFromMovie(movie))
                                 }
                             )
                         }
                         composable<Screen.Details> {
-                            val args = it.toRoute<Screen.Details>()
-                            MovieDetailsScreen(args = args)
+                            MovieDetailsScreen (onClickBack = {
+                                navController.popBackStack()
+                            })
                         }
                     }
                 }

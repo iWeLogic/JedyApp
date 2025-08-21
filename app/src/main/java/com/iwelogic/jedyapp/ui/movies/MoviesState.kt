@@ -2,8 +2,9 @@ package com.iwelogic.jedyapp.ui.movies
 
 import com.iwelogic.jedyapp.models.Movie
 
-sealed class MoviesState {
-    data object Loading : MoviesState()
-    data object Error : MoviesState()
-    data class Main(val movies: List<Movie>) : MoviesState()
-}
+data class MoviesState(
+    val query: String = "",
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val movies: List<Movie>? = null
+)
