@@ -1,4 +1,4 @@
-package com.iwelogic.jedyapp.ui.theme
+package com.iwelogic.jedyapp.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

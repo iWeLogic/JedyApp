@@ -1,4 +1,4 @@
-package com.iwelogic.jedyapp.ui.theme
+package com.iwelogic.jedyapp.theme
 
 import androidx.compose.ui.graphics.Color
 
