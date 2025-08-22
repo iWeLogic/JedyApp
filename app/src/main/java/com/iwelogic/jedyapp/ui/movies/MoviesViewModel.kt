@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.iwelogic.ads.AdProvider
 import com.iwelogic.jedyapp.data.MoviesRepository
 import com.iwelogic.jedyapp.R
+import com.iwelogic.jedyapp.di.SettingStorage
 import com.iwelogic.jedyapp.models.ListItem
 import com.iwelogic.jedyapp.models.NativeAdItem
 import com.iwelogic.jedyapp.ui.base.BaseViewModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
     @ApplicationContext applicationContext: Context,
+    private val settingStorage: SettingStorage,
     private val repository: MoviesRepository,
     val adProvider: AdProvider
 ) : BaseViewModel<MoviesState, MoviesIntent, MoviesEvent>(initialState = MoviesState()) {
@@ -69,7 +71,11 @@ class MoviesViewModel @Inject constructor(
                 onReload(intent.query)
             }
             is MoviesIntent.OnClickMovie -> {
-                adProvider.showInterstitial {
+                if(settingStorage.openCounter > 1){
+                    adProvider.showInterstitial {
+                        sendEvent(MoviesEvent.OpenProjectDetails(intent.movie))
+                    }
+                } else {
                     sendEvent(MoviesEvent.OpenProjectDetails(intent.movie))
                 }
             }
