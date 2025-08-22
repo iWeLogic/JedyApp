@@ -29,7 +29,7 @@ fun MovieItem(item: Movie, modifier: Modifier = Modifier, onClickItem: (Movie) -
         ) {
             RemoteImage(
                 url = item.poster!!, modifier = Modifier
-                    .size(100.dp, 100.dp)
+                    .size(100.dp, 140.dp)
                     .clip(MaterialTheme.shapes.large)
             )
 

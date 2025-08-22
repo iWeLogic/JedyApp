@@ -1,6 +1,7 @@
 package com.iwelogic.jedyapp.ui.details
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iwelogic.jedyapp.theme.LocalDimens
+import com.iwelogic.jedyapp.ui.views.RemoteImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +56,7 @@ fun MovieDetailsScreen(onClickBack: () -> Unit, viewModel: MovieDetailsViewModel
                     IconButton(onClick = {
                         viewModel.handleIntent(MovieDetailsIntent.OnClickFavorite)
                     }) {
-                        Icon(if(state.isFavorite ) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Favorite")
+                        Icon(if (state.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Favorite")
                     }
                 }
             )
@@ -65,14 +68,44 @@ fun MovieDetailsScreen(onClickBack: () -> Unit, viewModel: MovieDetailsViewModel
                 }
             } else {
                 Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
+                        .fillMaxSize()
                         .padding(innerPadding)
+                        .padding(all = LocalDimens.current.large)
                         .verticalScroll(rememberScrollState())
                 ) {
+
+                    RemoteImage(
+                        url = state.movie?.poster ?: "", modifier = Modifier
+                            .size(300.dp, 425.dp)
+                            .clip(MaterialTheme.shapes.large)
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = LocalDimens.current.large)
+                    ) {
+                        Text(
+                            "Type: ${state.movie?.type ?: ""}",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+
+                        Text(
+                            "Year: ${state.movie?.year ?: ""}",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+
                     Text(
-                        state.movie?.title ?: "Unknown",
+                        state.movie?.title ?: "",
+                        modifier = Modifier.padding(top = LocalDimens.current.large),
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.headlineLarge
                     )
                 }
             }
