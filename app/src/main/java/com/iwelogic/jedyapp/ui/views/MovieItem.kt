@@ -1,4 +1,4 @@
-package com.iwelogic.jedyapp.ui.movies
+package com.iwelogic.jedyapp.ui.views
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -6,7 +6,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import com.iwelogic.jedyapp.models.Movie
-import com.iwelogic.jedyapp.ui.views.CardHolder
 
 @Composable
 fun MovieItem(item: Movie, modifier: Modifier = Modifier, onClickItem: (Movie) -> Unit) {

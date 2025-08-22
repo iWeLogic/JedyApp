@@ -15,9 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.*
-import com.iwelogic.jedyapp.navigation.Screen
+import com.iwelogic.jedyapp.navigation.Route
 import com.iwelogic.jedyapp.theme.JedyAppTheme
 import com.iwelogic.jedyapp.ui.details.MovieDetailsScreen
+import com.iwelogic.jedyapp.ui.favourite.FavouriteScreen
 import com.iwelogic.jedyapp.ui.movies.MoviesScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                 Column {
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.Movies().route,
+                        startDestination = Route.Movies().route,
                         enterTransition = {
                             EnterTransition.None
                         },
@@ -56,17 +57,32 @@ class MainActivity : AppCompatActivity() {
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        composable(Screen.Movies().route) {
+                        composable(Route.Movies().route) {
                             MoviesScreen(
                                 openDetails = { movie ->
-                                    navController.navigate(Screen.Details.convertFromMovie(movie))
+                                    navController.navigate(Route.Details.fromMovie(movie))
+                                },
+                                openFavorite = {
+                                    navController.navigate(Route.Favourite)
                                 }
                             )
                         }
-                        composable<Screen.Details> {
-                            MovieDetailsScreen (onClickBack = {
-                                navController.popBackStack()
-                            })
+                        composable<Route.Favourite> {
+                            FavouriteScreen(
+                                openDetails = { movie ->
+                                    navController.navigate(Route.Details.fromMovie(movie))
+                                },
+                                onClickBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        composable<Route.Details> {
+                            MovieDetailsScreen(
+                                onClickBack = {
+                                    navController.popBackStack()
+                                }
+                            )
                         }
                     }
                 }

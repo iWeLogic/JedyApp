@@ -1,11 +1,11 @@
-package com.iwelogic.jedyapp.ui.movies
+package com.iwelogic.jedyapp.ui.favourite
 
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,16 +25,16 @@ import com.iwelogic.jedyapp.ui.views.MovieItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewModel: MoviesViewModel = hiltViewModel()) {
+fun FavouriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewModel: FavouriteViewModel = hiltViewModel()) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val state: MoviesState = viewModel.state.collectAsStateWithLifecycle().value
+    val state: FavouriteState = viewModel.state.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
         viewModel.event
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
             .collect { uiEffect ->
                 when (uiEffect) {
-                    is MoviesEvent.OpenProjectDetails -> openDetails(uiEffect.movie)
+                    is FavouriteEvent.OpenProjectDetails -> openDetails(uiEffect.movie)
                 }
             }
     }
@@ -58,30 +58,24 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
-                actions = {
+                navigationIcon = {
                     IconButton(onClick = {
-                        openFavorite()
+                        onClickBack()
                     }) {
-                        Icon(Icons.Default.Favorite, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         },
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
-                SearchBox(
-                    query = state.query,
-                    onQueryChange = {
-                        viewModel.handleIntent(MoviesIntent.OnSearch(it))
-                    }
-                )
                 if (state.isLoading) {
                     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                         CircularProgressIndicator()
                     }
                 } else if (!state.error.isNullOrEmpty()) {
                     ErrorPage(modifier = Modifier.fillMaxSize(), error = state.error) {
-                        viewModel.handleIntent(MoviesIntent.OnClickReload)
+                        viewModel.handleIntent(FavouriteIntent.OnClickReload)
                     }
                 } else {
                     val movies = state.movies
@@ -100,7 +94,7 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
                         ) {
                             items(state.movies, key = { movie -> movie.imdbID }) {
                                 MovieItem(item = it, modifier = Modifier.fillMaxWidth()) { movie ->
-                                    viewModel.handleIntent(MoviesIntent.OpenDetails(movie))
+                                    viewModel.handleIntent(FavouriteIntent.OpenDetails(movie))
                                 }
                             }
                         }

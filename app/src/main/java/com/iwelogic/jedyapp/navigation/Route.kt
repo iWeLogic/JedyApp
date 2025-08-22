@@ -3,15 +3,15 @@ package com.iwelogic.jedyapp.navigation
 import com.iwelogic.jedyapp.models.Movie
 import kotlinx.serialization.Serializable
 
-sealed class Screen {
+sealed class Route {
 
     @Serializable
     data class Movies(
         val route: String = "movies"
-    ) : Screen()
+    ) : Route()
 
     @Serializable
-    data object Favourite : Screen()
+    data object Favourite : Route()
 
     @Serializable
     data class Details(
@@ -20,8 +20,8 @@ sealed class Screen {
         val imdbID: String,
         val poster: String? = null,
         val title: String
-    ) : Screen() {
-        fun convertToMovie(): Movie {
+    ) : Route() {
+        fun toMovie(): Movie {
             return Movie(
                 type = type,
                 year = year,
@@ -31,8 +31,8 @@ sealed class Screen {
             )
         }
 
-        companion object {
-            fun convertFromMovie(movie: Movie) : Details {
+        companion object Companion {
+            fun fromMovie(movie: Movie): Details {
                 return Details(
                     type = movie.type,
                     year = movie.year,
