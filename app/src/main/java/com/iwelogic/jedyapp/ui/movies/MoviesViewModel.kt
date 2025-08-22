@@ -8,6 +8,7 @@ import com.iwelogic.jedyapp.models.NativeAdItem
 import com.iwelogic.jedyapp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,12 +46,10 @@ class MoviesViewModel @Inject constructor(
                     )
                 }
                 .onFailure { failure ->
-                    setState(
-                        state.value.copy(
-                            isLoading = false,
-                            error = failure.message,
-                        )
-                    )
+                    when (failure) {
+                        is UnknownHostException -> setState(state.value.copy(isLoading = false, error = "No internet connection"))
+                        else -> setState(state.value.copy(isLoading = false, error = failure.message))
+                    }
                 }
         }
     }
