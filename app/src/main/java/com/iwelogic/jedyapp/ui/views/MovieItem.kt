@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iwelogic.jedyapp.models.Movie
@@ -35,6 +36,8 @@ fun MovieItem(item: Movie, modifier: Modifier = Modifier, onClickItem: (Movie) -
 
             Text(
                 item.title,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(horizontal = LocalDimens.current.large),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
