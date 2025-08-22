@@ -34,6 +34,7 @@ object NativeAdCache {
     fun put(adUnitId: String, nativeAd: NativeAd) {
         ads[adUnitId] = nativeAd
     }
+
     fun clear() {
         ads.clear()
     }

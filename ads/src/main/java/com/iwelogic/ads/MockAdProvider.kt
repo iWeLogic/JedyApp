@@ -6,19 +6,11 @@ import com.google.android.gms.ads.nativead.NativeAd
 
 object MockAdProvider : AdProvider {
 
-    override fun init(activity: Activity) {
-    }
+    override fun init(activity: Activity) {}
 
-    override fun loadNativeAd(adUnitId: String, onAdLoaded: (NativeAd) -> Unit) {
+    override fun loadNativeAd(adUnitId: String, onAdLoaded: (NativeAd) -> Unit) {}
 
-    }
+    override fun loadInterstitial(adUnitId: String) {}
 
-
-    override fun loadInterstitial(adUnitId: String) {
-
-    }
-
-    override fun showInterstitial(onShown: (() -> Unit)?) {
-
-    }
+    override fun showInterstitial(onShown: (() -> Unit)?) {}
 }

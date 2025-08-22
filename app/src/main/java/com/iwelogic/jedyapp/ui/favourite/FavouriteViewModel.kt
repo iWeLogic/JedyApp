@@ -1,6 +1,5 @@
 package com.iwelogic.jedyapp.ui.favourite
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.iwelogic.jedyapp.data.MoviesRepository
 import com.iwelogic.jedyapp.ui.base.BaseViewModel
@@ -19,28 +18,20 @@ class FavouriteViewModel @Inject constructor(
 
     private fun onReload() {
         viewModelScope.launch {
-            setState(
-                state.value.copy(
-                    isLoading = true
-                )
-            )
+            setState(state.value.copy(isLoading = true))
             moviesRepository.getFavouriteMovies().collect { result ->
-                Log.w("myLog", "result: $result")
                 setState(
                     state.value.copy(
-                        error = null,
                         isLoading = false,
                         movies = result
                     )
                 )
             }
-
         }
     }
 
     override fun handleIntent(intent: FavouriteIntent) {
         when (intent) {
-            is FavouriteIntent.OnClickReload -> onReload()
             is FavouriteIntent.OpenDetails -> sendEvent(FavouriteEvent.OpenProjectDetails(intent.movie))
         }
     }

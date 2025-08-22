@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -20,10 +21,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.iwelogic.jedyapp.models.Movie
-import com.iwelogic.jedyapp.ui.views.ErrorPage
+import com.iwelogic.jedyapp.theme.JedyAppTheme
+import com.iwelogic.jedyapp.ui.views.EmptyPage
 import com.iwelogic.jedyapp.ui.views.MovieItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavouriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewModel: FavouriteViewModel = hiltViewModel()) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -38,6 +39,24 @@ fun FavouriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewM
                 }
             }
     }
+
+    FavoriteView(
+        state = state,
+        onClickBack = onClickBack,
+        onClickDetails = { movie ->
+            viewModel.handleIntent(FavouriteIntent.OpenDetails(movie))
+        }
+    )
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FavoriteView(
+    state: FavouriteState,
+    onClickDetails: (Movie) -> Unit,
+    onClickBack: () -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.systemBars,
@@ -73,14 +92,13 @@ fun FavouriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewM
                     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                         CircularProgressIndicator()
                     }
-                } else if (!state.error.isNullOrEmpty()) {
-                    ErrorPage(modifier = Modifier.fillMaxSize(), error = state.error) {
-                        viewModel.handleIntent(FavouriteIntent.OnClickReload)
-                    }
                 } else {
                     val movies = state.movies
                     if (movies.isNullOrEmpty()) {
-                        Text("Empty")
+                        EmptyPage(
+                            modifier = Modifier.fillMaxSize(),
+                            text = "You haven't added any movies to favorites yet."
+                        )
                     } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
@@ -94,7 +112,7 @@ fun FavouriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewM
                         ) {
                             items(state.movies, key = { movie -> movie.imdbID }) {
                                 MovieItem(item = it, modifier = Modifier.fillMaxWidth()) { movie ->
-                                    viewModel.handleIntent(FavouriteIntent.OpenDetails(movie))
+                                    onClickDetails(movie)
                                 }
                             }
                         }
@@ -103,4 +121,22 @@ fun FavouriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewM
             }
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MoviesScreenPreview() {
+    JedyAppTheme {
+        FavoriteView(
+            state = FavouriteState(
+                isLoading = false,
+                movies = listOf(
+                    Movie("movie", "1981", "tt0082681", "test", "Test title first"),
+                    Movie("movie", "1981", "tt0082682", "test", "Test title second"),
+                )
+            ),
+            onClickBack = {},
+            onClickDetails = {},
+        )
+    }
 }

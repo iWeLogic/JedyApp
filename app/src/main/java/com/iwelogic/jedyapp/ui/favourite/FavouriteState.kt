@@ -4,6 +4,5 @@ import com.iwelogic.jedyapp.models.Movie
 
 data class FavouriteState(
     val isLoading: Boolean = false,
-    val error: String? = null,
     val movies: List<Movie>? = null
 )

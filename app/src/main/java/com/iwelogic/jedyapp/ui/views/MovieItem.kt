@@ -1,6 +1,5 @@
 package com.iwelogic.jedyapp.ui.views
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +16,6 @@ import com.iwelogic.jedyapp.theme.LocalDimens
 
 @Composable
 fun MovieItem(item: Movie, modifier: Modifier = Modifier, onClickItem: (Movie) -> Unit) {
-    Log.w("myLog", "MovieItem: RECOMPOSE")
     CardHolder(
         modifier = modifier
     ) {
@@ -38,7 +36,6 @@ fun MovieItem(item: Movie, modifier: Modifier = Modifier, onClickItem: (Movie) -
             Text(
                 item.title,
                 modifier = Modifier.padding(horizontal = LocalDimens.current.large),
-
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )

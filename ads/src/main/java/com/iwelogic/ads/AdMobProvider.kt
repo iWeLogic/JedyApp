@@ -6,7 +6,6 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
 
-
 class AdMobProvider() : AdProvider {
 
     private var interstitialAd: InterstitialAd? = null
@@ -20,7 +19,6 @@ class AdMobProvider() : AdProvider {
     override fun loadNativeAd(adUnitId: String, onAdLoaded: (NativeAd) -> Unit) {
         val adLoader = AdLoader.Builder(activity, adUnitId)
             .forNativeAd { nativeAd ->
-                // Return the native ad itself, not the view
                 onAdLoaded(nativeAd)
             }
             .withAdListener(object : AdListener() {
