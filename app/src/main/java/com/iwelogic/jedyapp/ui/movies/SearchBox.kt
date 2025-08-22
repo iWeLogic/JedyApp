@@ -8,9 +8,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import com.iwelogic.jedyapp.theme.LocalDimens
+import com.iwelogic.jedyapp.R
 
 @Composable
 fun SearchBox(
@@ -28,7 +30,7 @@ fun SearchBox(
                 start = LocalDimens.current.large,
                 end = LocalDimens.current.large
             ),
-        placeholder = { Text("Search...", fontSize = 18.sp) },
+        placeholder = { Text(stringResource(R.string.search_hint), fontSize = 18.sp) },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,

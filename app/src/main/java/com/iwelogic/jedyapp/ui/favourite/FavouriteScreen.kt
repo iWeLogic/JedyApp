@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.iwelogic.jedyapp.R
 import com.iwelogic.jedyapp.models.Movie
 import com.iwelogic.jedyapp.theme.JedyAppTheme
 import com.iwelogic.jedyapp.ui.views.EmptyPage
@@ -66,7 +68,7 @@ fun FavoriteView(
                     .clip(RoundedCornerShape(0.dp, 0.dp, 15.dp, 15.dp)),
                 title = {
                     Text(
-                        "JedyApp",
+                        stringResource(R.string.app_name),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -97,7 +99,7 @@ fun FavoriteView(
                     if (movies.isNullOrEmpty()) {
                         EmptyPage(
                             modifier = Modifier.fillMaxSize(),
-                            text = "You haven't added any movies to favorites yet."
+                            text = stringResource(R.string.no_movies_favourite)
                         )
                     } else {
                         LazyColumn(

@@ -1,7 +1,6 @@
 package com.iwelogic.jedyapp.ui.details
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -14,10 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iwelogic.jedyapp.R
 import com.iwelogic.jedyapp.theme.LocalDimens
 import com.iwelogic.jedyapp.ui.views.RemoteImage
 
@@ -34,7 +35,7 @@ fun MovieDetailsScreen(onClickBack: () -> Unit, viewModel: MovieDetailsViewModel
                     .clip(RoundedCornerShape(0.dp, 0.dp, 15.dp, 15.dp)),
                 title = {
                     Text(
-                        state.movie?.title ?: "Unknown",
+                        state.movie.title,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -77,7 +78,7 @@ fun MovieDetailsScreen(onClickBack: () -> Unit, viewModel: MovieDetailsViewModel
                 ) {
 
                     RemoteImage(
-                        url = state.movie?.poster ?: "", modifier = Modifier
+                        url = state.movie.poster, modifier = Modifier
                             .size(300.dp, 425.dp)
                             .clip(MaterialTheme.shapes.large)
                     )
@@ -89,20 +90,20 @@ fun MovieDetailsScreen(onClickBack: () -> Unit, viewModel: MovieDetailsViewModel
                             .padding(top = LocalDimens.current.large)
                     ) {
                         Text(
-                            "Type: ${state.movie?.type ?: ""}",
+                            String.format(stringResource(R.string.type), state.movie.type),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.titleLarge
                         )
 
                         Text(
-                            "Year: ${state.movie?.year ?: ""}",
+                            String.format(stringResource(R.string.year), state.movie.year),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.titleLarge
                         )
                     }
 
                     Text(
-                        state.movie?.title ?: "",
+                        state.movie.title,
                         modifier = Modifier.padding(top = LocalDimens.current.large),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.headlineLarge

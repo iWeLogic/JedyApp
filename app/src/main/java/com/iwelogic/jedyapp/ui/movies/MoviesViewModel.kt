@@ -1,23 +1,28 @@
 package com.iwelogic.jedyapp.ui.movies
 
+import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.iwelogic.ads.AdProvider
 import com.iwelogic.jedyapp.data.MoviesRepository
+import com.iwelogic.jedyapp.R
 import com.iwelogic.jedyapp.models.ListItem
 import com.iwelogic.jedyapp.models.NativeAdItem
 import com.iwelogic.jedyapp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import java.net.UnknownHostException
 import javax.inject.Inject
 
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
+    @ApplicationContext applicationContext: Context,
     private val repository: MoviesRepository,
     val adProvider: AdProvider
 ) : BaseViewModel<MoviesState, MoviesIntent, MoviesEvent>(initialState = MoviesState()) {
 
     var searchJob: Job? = null
+    var noInternetErrorTxt: String = applicationContext.getString(R.string.no_internet)
 
     init {
         adProvider.loadInterstitial(adUnitId = "ca-app-pub-3940256099942544/1033173712")
@@ -47,7 +52,7 @@ class MoviesViewModel @Inject constructor(
                 }
                 .onFailure { failure ->
                     when (failure) {
-                        is UnknownHostException -> setState(state.value.copy(isLoading = false, error = "No internet connection"))
+                        is UnknownHostException -> setState(state.value.copy(isLoading = false, error = noInternetErrorTxt))
                         else -> setState(state.value.copy(isLoading = false, error = failure.message))
                     }
                 }

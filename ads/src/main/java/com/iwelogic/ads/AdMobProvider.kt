@@ -73,6 +73,9 @@ class AdMobProvider() : AdProvider {
                 loadInterstitial(interstitialId)
             }
         }
-        interstitialAd?.show(activity)
+        interstitialAd?.show(activity) ?: run {
+            loadInterstitial(interstitialId)
+            onShown?.invoke()
+        }
     }
 }

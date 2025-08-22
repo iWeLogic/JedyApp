@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import com.iwelogic.jedyapp.models.Movie
 import com.iwelogic.jedyapp.models.NativeAdItem
 import com.iwelogic.jedyapp.theme.JedyAppTheme
 import com.iwelogic.jedyapp.ui.views.*
+import com.iwelogic.jedyapp.R
 
 @Composable
 fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewModel: MoviesViewModel = hiltViewModel()) {
@@ -70,7 +72,7 @@ fun MoviesScreenView(
                     .clip(RoundedCornerShape(0.dp, 0.dp, 15.dp, 15.dp)),
                 title = {
                     Text(
-                        "JedyApp",
+                        stringResource(R.string.app_name),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -111,7 +113,7 @@ fun MoviesScreenView(
                     if (movies.isNullOrEmpty()) {
                         EmptyPage(
                             modifier = Modifier.fillMaxSize(),
-                            text = "No movies found matching your query"
+                            text = stringResource(R.string.no_movies_search)
                         )
                     } else {
                         LazyColumn(
