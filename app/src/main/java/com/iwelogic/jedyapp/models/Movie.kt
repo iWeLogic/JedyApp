@@ -28,4 +28,9 @@ data class Movie(
     @ColumnInfo(name = "title")
     @field:SerializedName("Title")
     val title: String
-)
+    
+) : ListItem {
+
+    override val id: String
+        get() = imdbID
+}

@@ -19,7 +19,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.iwelogic.ads.NativeAdComposable
 import com.iwelogic.jedyapp.models.Movie
+import com.iwelogic.jedyapp.models.NativeAdItem
 import com.iwelogic.jedyapp.ui.views.ErrorPage
 import com.iwelogic.jedyapp.ui.views.MovieItem
 
@@ -28,7 +30,6 @@ import com.iwelogic.jedyapp.ui.views.MovieItem
 fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewModel: MoviesViewModel = hiltViewModel()) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val state: MoviesState = viewModel.state.collectAsStateWithLifecycle().value
-
     LaunchedEffect(Unit) {
         viewModel.event
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
@@ -62,7 +63,7 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
                     IconButton(onClick = {
                         openFavorite()
                     }) {
-                        Icon(Icons.Default.Favorite, contentDescription = "Back")
+                        Icon(Icons.Default.Favorite, contentDescription = "Favorite")
                     }
                 }
             )
@@ -84,7 +85,7 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
                         viewModel.handleIntent(MoviesIntent.OnClickReload)
                     }
                 } else {
-                    val movies = state.movies
+                    val movies = state.items
                     if (movies.isNullOrEmpty()) {
                         Text("Empty")
                     } else {
@@ -98,9 +99,14 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
                             flingBehavior = ScrollableDefaults.flingBehavior(),
                             userScrollEnabled = true,
                         ) {
-                            items(state.movies, key = { movie -> movie.imdbID }) {
-                                MovieItem(item = it, modifier = Modifier.fillMaxWidth()) { movie ->
-                                    viewModel.handleIntent(MoviesIntent.OpenDetails(movie))
+
+                            items(state.items, key = { item -> item.id }) { item ->
+                                if (item is Movie) {
+                                    MovieItem(item = item, modifier = Modifier.fillMaxWidth()) { movie ->
+                                        viewModel.handleIntent(MoviesIntent.OpenDetails(movie))
+                                    }
+                                } else if (item is NativeAdItem) {
+                                    viewModel.adProvider.NativeAdComposable("ca-app-pub-3940256099942544/2247696110", modifier = Modifier.fillMaxWidth())
                                 }
                             }
                         }

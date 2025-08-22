@@ -1,5 +1,6 @@
 package com.iwelogic.jedyapp.ui.views
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,6 +10,7 @@ import com.iwelogic.jedyapp.models.Movie
 
 @Composable
 fun MovieItem(item: Movie, modifier: Modifier = Modifier, onClickItem: (Movie) -> Unit) {
+    Log.w("myLog", "MovieItem: RECOMPOSE")
     CardHolder(
         modifier = modifier
     ) {

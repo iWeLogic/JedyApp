@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":ads")
+
+
 pluginManagement {
     repositories {
         google {
@@ -23,4 +26,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "JedyApp"
 include(":app")
- 
+include(":ads")

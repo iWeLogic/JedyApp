@@ -63,6 +63,7 @@ android {
 
 dependencies {
 
+    implementation(project(":ads"))
     implementation(libs.androidx.appcompat)
 
     implementation(libs.navigation.compose)
