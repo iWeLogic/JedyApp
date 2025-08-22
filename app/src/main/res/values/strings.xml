@@ -4,7 +4,7 @@
     <string name="error_loading">error\nloading</string>
     <string name="search_hint">Search…</string>
     <string name="no_movies_search">No movies found matching your query</string>
-    <string name="no_movies_favourite">You haven\'t added any movies to favorites yet.</string>
+    <string name="no_movies_favorite">You haven\'t added any movies to favorites yet.</string>
     <string name="type">Type: %1$s</string>
     <string name="year">Year: %1$s</string>
 </resources>

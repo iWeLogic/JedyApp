@@ -16,7 +16,7 @@ import com.iwelogic.ads.AdProvider
 import com.iwelogic.jedyapp.navigation.Route
 import com.iwelogic.jedyapp.theme.JedyAppTheme
 import com.iwelogic.jedyapp.ui.details.MovieDetailsScreen
-import com.iwelogic.jedyapp.ui.favourite.FavouriteScreen
+import com.iwelogic.jedyapp.ui.favorite.FavoriteScreen
 import com.iwelogic.jedyapp.ui.movies.MoviesScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                         composable<Route.Favourite> {
-                            FavouriteScreen(
+                            FavoriteScreen(
                                 openDetails = { movie ->
                                     navController.navigate(Route.Details.fromMovie(movie))
                                 },

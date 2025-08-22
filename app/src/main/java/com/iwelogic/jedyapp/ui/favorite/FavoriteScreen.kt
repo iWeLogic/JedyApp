@@ -1,4 +1,4 @@
-package com.iwelogic.jedyapp.ui.favourite
+package com.iwelogic.jedyapp.ui.favorite
 
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.*
@@ -28,16 +28,16 @@ import com.iwelogic.jedyapp.ui.views.EmptyPage
 import com.iwelogic.jedyapp.ui.views.MovieItem
 
 @Composable
-fun FavouriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewModel: FavouriteViewModel = hiltViewModel()) {
+fun FavoriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewModel: FavoriteViewModel = hiltViewModel()) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val state: FavouriteState = viewModel.state.collectAsStateWithLifecycle().value
+    val state: FavoriteState = viewModel.state.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
         viewModel.event
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
             .collect { uiEffect ->
                 when (uiEffect) {
-                    is FavouriteEvent.OpenProjectDetails -> openDetails(uiEffect.movie)
+                    is FavoriteEvent.OpenProjectDetails -> openDetails(uiEffect.movie)
                 }
             }
     }
@@ -46,7 +46,7 @@ fun FavouriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewM
         state = state,
         onClickBack = onClickBack,
         onClickDetails = { movie ->
-            viewModel.handleIntent(FavouriteIntent.OpenDetails(movie))
+            viewModel.handleIntent(FavoriteIntent.OpenDetails(movie))
         }
     )
 
@@ -55,7 +55,7 @@ fun FavouriteScreen(openDetails: (Movie) -> Unit, onClickBack: () -> Unit, viewM
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteView(
-    state: FavouriteState,
+    state: FavoriteState,
     onClickDetails: (Movie) -> Unit,
     onClickBack: () -> Unit
 ) {
@@ -99,7 +99,7 @@ fun FavoriteView(
                     if (movies.isNullOrEmpty()) {
                         EmptyPage(
                             modifier = Modifier.fillMaxSize(),
-                            text = stringResource(R.string.no_movies_favourite)
+                            text = stringResource(R.string.no_movies_favorite)
                         )
                     } else {
                         LazyColumn(
@@ -127,10 +127,10 @@ fun FavoriteView(
 
 @Preview(showBackground = true)
 @Composable
-fun MoviesScreenPreview() {
+fun FavoriteScreenPreview() {
     JedyAppTheme {
         FavoriteView(
-            state = FavouriteState(
+            state = FavoriteState(
                 isLoading = false,
                 movies = listOf(
                     Movie("movie", "1981", "tt0082681", "test", "Test title first"),

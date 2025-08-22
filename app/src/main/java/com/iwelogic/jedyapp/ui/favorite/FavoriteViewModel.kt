@@ -1,4 +1,4 @@
-package com.iwelogic.jedyapp.ui.favourite
+package com.iwelogic.jedyapp.ui.favorite
 
 import androidx.lifecycle.viewModelScope
 import com.iwelogic.jedyapp.data.MoviesRepository
@@ -8,9 +8,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavouriteViewModel @Inject constructor(
+class FavoriteViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository
-) : BaseViewModel<FavouriteState, FavouriteIntent, FavouriteEvent>(initialState = FavouriteState()) {
+) : BaseViewModel<FavoriteState, FavoriteIntent, FavoriteEvent>(initialState = FavoriteState()) {
 
     init {
         onReload()
@@ -30,9 +30,9 @@ class FavouriteViewModel @Inject constructor(
         }
     }
 
-    override fun handleIntent(intent: FavouriteIntent) {
+    override fun handleIntent(intent: FavoriteIntent) {
         when (intent) {
-            is FavouriteIntent.OpenDetails -> sendEvent(FavouriteEvent.OpenProjectDetails(intent.movie))
+            is FavoriteIntent.OpenDetails -> sendEvent(FavoriteEvent.OpenProjectDetails(intent.movie))
         }
     }
 }

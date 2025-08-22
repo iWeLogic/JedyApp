@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class DataBaseSource @Inject constructor(@ApplicationContext applicationContext: Context) {
 
-    private var dataBase = Room.databaseBuilder(applicationContext, DataBase::class.java, "favourite")
+    private var dataBase = Room.databaseBuilder(applicationContext, DataBase::class.java, "favorite")
         .allowMainThreadQueries().build()
 
     suspend fun insertMovieToFavourite(movie: Movie): Result<Boolean> {
