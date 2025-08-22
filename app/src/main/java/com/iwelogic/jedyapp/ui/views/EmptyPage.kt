@@ -7,33 +7,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.iwelogic.jedyapp.R
 
 @Composable
-fun ErrorPage(modifier: Modifier = Modifier, error: String? = null, onClickReload: () -> Unit) {
+fun EmptyPage(modifier: Modifier = Modifier, text: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(30.dp, alignment = Alignment.CenterVertically),
-        modifier = modifier
+        modifier = modifier.padding(30.dp)
     ) {
         Image(painter = painterResource(R.drawable.error_loading), contentDescription = "")
 
         Text(
-            text = error ?: "Ups something went wrong",
+            text = text,
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall
         )
-        Button(
-            onClick = onClickReload,
-            shape = MaterialTheme.shapes.large,
-            modifier = Modifier.size(height = 50.dp, width = 200.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer)
-        ) {
-            Text(
-                text = "Reload",
-                style = MaterialTheme.typography.headlineSmall
-            )
-        }
     }
-
 }

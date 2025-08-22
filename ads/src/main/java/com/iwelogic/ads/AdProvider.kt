@@ -2,8 +2,11 @@ package com.iwelogic.ads
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.widget.*
+import androidx.cardview.widget.CardView
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
@@ -53,18 +56,23 @@ fun AdProvider.NativeAdComposable(adUnitId: String, modifier: Modifier = Modifie
     nativeAd?.let { ad ->
         AndroidView(
             factory = { context ->
-                val adView = LayoutInflater.from(context)
-                    .inflate(R.layout.item_native_ad, null) as NativeAdView
+                val cardView = LayoutInflater.from(context)
+                    .inflate(R.layout.item_native_ad, null) as CardView
+                val adView = cardView.findViewById<NativeAdView>(R.id.native_ad_view)
 
                 adView.headlineView = adView.findViewById(R.id.ad_headline)
                 adView.iconView = adView.findViewById(R.id.ad_app_icon)
                 adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
                 (adView.headlineView as TextView).text = ad.headline
-                (adView.callToActionView as Button).text = ad.callToAction
+                (adView.callToActionView as Button).apply {
+                    text = ad.callToAction
+                    backgroundTintList = ColorStateList.valueOf(Color.BLACK)
+                }
+
                 ad.icon?.let { (adView.iconView as ImageView).setImageDrawable(it.drawable) }
 
                 adView.setNativeAd(ad)
-                adView
+                cardView
             },
             modifier = modifier
         )

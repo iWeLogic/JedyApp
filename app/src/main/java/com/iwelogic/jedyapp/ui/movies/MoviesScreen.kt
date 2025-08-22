@@ -13,19 +13,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import com.iwelogic.ads.NativeAdComposable
+import com.iwelogic.ads.*
 import com.iwelogic.jedyapp.models.Movie
 import com.iwelogic.jedyapp.models.NativeAdItem
-import com.iwelogic.jedyapp.ui.views.ErrorPage
-import com.iwelogic.jedyapp.ui.views.MovieItem
+import com.iwelogic.jedyapp.theme.JedyAppTheme
+import com.iwelogic.jedyapp.ui.views.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewModel: MoviesViewModel = hiltViewModel()) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -36,9 +36,31 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
             .collect { uiEffect ->
                 when (uiEffect) {
                     is MoviesEvent.OpenProjectDetails -> openDetails(uiEffect.movie)
+                    MoviesEvent.OpenFavorite -> openFavorite()
                 }
             }
     }
+
+    MoviesScreenView(
+        state = state,
+        onClickReload = { viewModel.handleIntent(MoviesIntent.OnClickReload) },
+        onClickFavorite = { viewModel.handleIntent(MoviesIntent.OnClickFavorite) },
+        onClickDetails = { movie -> viewModel.handleIntent(MoviesIntent.OnClickMovie(movie)) },
+        onSearch = { query -> viewModel.handleIntent(MoviesIntent.OnSearch(query)) },
+        adProvider = viewModel.adProvider
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoviesScreenView(
+    state: MoviesState,
+    onClickReload: () -> Unit,
+    onClickFavorite: () -> Unit,
+    onSearch: (String) -> Unit,
+    onClickDetails: (Movie) -> Unit,
+    adProvider: AdProvider
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.systemBars,
@@ -61,7 +83,7 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
                 ),
                 actions = {
                     IconButton(onClick = {
-                        openFavorite()
+                        onClickFavorite()
                     }) {
                         Icon(Icons.Default.Favorite, contentDescription = "Favorite")
                     }
@@ -73,7 +95,7 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
                 SearchBox(
                     query = state.query,
                     onQueryChange = {
-                        viewModel.handleIntent(MoviesIntent.OnSearch(it))
+                        onSearch(it)
                     }
                 )
                 if (state.isLoading) {
@@ -82,12 +104,15 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
                     }
                 } else if (!state.error.isNullOrEmpty()) {
                     ErrorPage(modifier = Modifier.fillMaxSize(), error = state.error) {
-                        viewModel.handleIntent(MoviesIntent.OnClickReload)
+                        onClickReload()
                     }
                 } else {
                     val movies = state.items
                     if (movies.isNullOrEmpty()) {
-                        Text("Empty")
+                        EmptyPage(
+                            modifier = Modifier.fillMaxSize(),
+                            text = "No movies found matching your query"
+                        )
                     } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
@@ -103,10 +128,13 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
                             items(state.items, key = { item -> item.id }) { item ->
                                 if (item is Movie) {
                                     MovieItem(item = item, modifier = Modifier.fillMaxWidth()) { movie ->
-                                        viewModel.handleIntent(MoviesIntent.OpenDetails(movie))
+                                        onClickDetails(movie)
                                     }
                                 } else if (item is NativeAdItem) {
-                                    viewModel.adProvider.NativeAdComposable("ca-app-pub-3940256099942544/2247696110", modifier = Modifier.fillMaxWidth())
+                                    adProvider.NativeAdComposable(
+                                        "ca-app-pub-3940256099942544/2247696110",
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
                                 }
                             }
                         }
@@ -115,4 +143,27 @@ fun MoviesScreen(openDetails: (Movie) -> Unit, openFavorite: () -> Unit, viewMod
             }
         }
     )
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun MoviesScreenPreview() {
+    JedyAppTheme {
+        MoviesScreenView(
+            state = MoviesState(
+                isLoading = false,
+                error = null,
+                items = listOf(
+                    Movie("movie", "1981", "tt0082681", "test", "Test title first"),
+                    Movie("movie", "1981", "tt0082682", "test", "Test title second"),
+                )
+            ),
+            onClickReload = {},
+            onClickFavorite = {},
+            onClickDetails = {},
+            onSearch = {},
+            adProvider = MockAdProvider
+        )
+    }
 }

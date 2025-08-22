@@ -1,9 +1,15 @@
 package com.iwelogic.jedyapp.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+
 
 private val DarkColorScheme = darkColorScheme(
     primary = Blue,
@@ -39,8 +45,24 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+data class Dimens(
+    val small: Dp = 4.dp,
+    val medium: Dp = 8.dp,
+    val large: Dp = 16.dp
+)
+
+val AppShapes = Shapes(
+    small = RoundedCornerShape(4.dp),
+    medium = RoundedCornerShape(8.dp),
+    large = RoundedCornerShape(16.dp)
+)
+
+
+val LocalDimens = staticCompositionLocalOf { Dimens() }
+
 @Composable
 fun JedyAppTheme(
+    dimens: Dimens = Dimens(),
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -48,10 +70,12 @@ fun JedyAppTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(LocalDimens provides dimens) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content,
+            shapes = AppShapes
+        )
+    }
 }
