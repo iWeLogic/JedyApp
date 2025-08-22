@@ -2,6 +2,7 @@
     <string name="app_name">JedyApp</string>
     <string name="no_internet">No internet connection</string>
     <string name="error_loading">error\nloading</string>
+    <string name="favorites">Favorites</string>
     <string name="search_hint">Search…</string>
     <string name="no_movies_search">No movies found matching your query</string>
     <string name="no_movies_favorite">You haven\'t added any movies to favorites yet.</string>

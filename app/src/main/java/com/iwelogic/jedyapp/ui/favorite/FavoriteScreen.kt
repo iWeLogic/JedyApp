@@ -68,7 +68,7 @@ fun FavoriteView(
                     .clip(RoundedCornerShape(0.dp, 0.dp, 15.dp, 15.dp)),
                 title = {
                     Text(
-                        stringResource(R.string.app_name),
+                        stringResource(R.string.favorites),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleLarge
                     )
