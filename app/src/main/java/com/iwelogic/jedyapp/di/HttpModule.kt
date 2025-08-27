@@ -1,15 +1,13 @@
 package com.iwelogic.jedyapp.di
 
-import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.iwelogic.jedyapp.data.MoviesApi
-import com.iwelogic.jedyapp.BuildConfig.BACKEND_URL
+import com.iwelogic.jedyapp.BuildConfig.*
 import com.iwelogic.jedyapp.data.ApiKeyInterceptor
+import com.iwelogic.jedyapp.data.MoviesApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -60,11 +58,11 @@ object HttpModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(@ApplicationContext applicationContext: Context): OkHttpClient {
+    fun provideOkHttpClient(): OkHttpClient {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
         val builder = OkHttpClient.Builder()
-        builder.addInterceptor(ApiKeyInterceptor(applicationContext))
+        builder.addInterceptor(ApiKeyInterceptor())
         builder.addInterceptor(logging)
         builder.connectTimeout(30, TimeUnit.SECONDS)
         builder.writeTimeout(30, TimeUnit.SECONDS)
