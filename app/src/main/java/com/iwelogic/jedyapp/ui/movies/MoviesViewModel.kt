@@ -3,8 +3,8 @@ package com.iwelogic.jedyapp.ui.movies
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.iwelogic.ads.AdProvider
-import com.iwelogic.jedyapp.data.MoviesRepository
 import com.iwelogic.jedyapp.R
+import com.iwelogic.jedyapp.data.MoviesRepository
 import com.iwelogic.jedyapp.di.SettingStorage
 import com.iwelogic.jedyapp.models.ListItem
 import com.iwelogic.jedyapp.models.NativeAdItem
@@ -71,7 +71,7 @@ class MoviesViewModel @Inject constructor(
                 onReload(intent.query)
             }
             is MoviesIntent.OnClickMovie -> {
-                if(settingStorage.openCounter > 1){
+                if (settingStorage.openCounter > 1) {
                     adProvider.showInterstitial {
                         sendEvent(MoviesEvent.OpenProjectDetails(intent.movie))
                     }
